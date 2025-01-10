@@ -23,19 +23,20 @@
     <div id="app" class="container">
         <div class="row">
             <div class="col-12">
-                <h1>Time.calc <span id="viewYear"></span></h1>
+                <h1>Time.calc</h1>
+                <h2 id="viewYear"></h2>
                 <script>
-                    
+
                     setInterval(() => {
                         const year = new Date().getFullYear();
-                        const month = new Date().getMonth() + 1;
-                        const day = new Date().getDate();
+                        const month = ('0' + (new Date().getMonth() + 1)).slice(-2);
+                        const day = ('0' + new Date().getDate()).slice(-2);
                         const today = year + '/' + month + '/' + day;
-                        
-                        const hour = new Date().getHours();
-                        const minute = new Date().getMinutes();
-                        const second = new Date().getSeconds();
-                        const millisecond = new Date().getMilliseconds();
+
+                        const hour = ('0' + new Date().getHours()).slice(-2);
+                        const minute = ('0' + new Date().getMinutes()).slice(-2);
+                        const second = ('0' + new Date().getSeconds()).slice(-2);
+                        const millisecond = ('0' + new Date().getMilliseconds()).slice(-2);
                         const now = hour + ':' + minute + ':' + second;
 
                         document.getElementById('viewYear').textContent = today + ' ' + now;
