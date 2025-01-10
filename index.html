@@ -23,7 +23,11 @@
     <div id="app" class="container">
         <div class="row">
             <div class="col-12">
-                <h1>Time.calc</h1>
+                <h1>Time.calc <span id="viewYear"></span></h1>
+                <script>
+                    const year= new Date().getFullYear();
+                    document.getElementById('viewYear').textContent = year;
+                </script>
             </div>
             <hr>
             <div class="col-12">
