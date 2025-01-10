@@ -25,17 +25,17 @@
             <div class="col-12">
                 <h1>Time.calc <span id="viewYear"></span></h1>
                 <script>
-                    const year= new Date().getFullYear();
+                    const year = new Date().getFullYear();
                     document.getElementById('viewYear').textContent = year;
                 </script>
             </div>
             <hr>
             <div class="col-12">
                 <div class="form-group">
-                    <div id="calendar1-title"></div>
+                    <div id="calendar1-title" class="month-Tile"></div>
                     <div id="calendar1" class="calendar-wrap"></div>
                     <hr>
-                    <div id="calendar2-title"></div>
+                    <div id="calendar2-title" class="month-Tile"></div>
                     <div id="calendar2" class="calendar-wrap"></div>
                     <style>
                         .calendar-wrap {
@@ -56,6 +56,10 @@
                         .calendar {
                             width: 100%;
                             border-collapse: collapse;
+                        }
+
+                        .month-Tile {
+                            font-size: 1.5rem;
                         }
 
                         .calendar th,
