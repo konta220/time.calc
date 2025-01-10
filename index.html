@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" lang="ja">
     <meta http-equiv="content-language" content="ja">
-    <title>Time-Calculator.</title>
+    <title>Time.calc</title>
 
     <link rel="manifest" href="manifest.json">
     <meta name="author" content="konta220">
@@ -23,9 +23,9 @@
     <div id="app" class="container">
         <div class="row">
             <div class="col-12">
-                <h1>Time-Calculator</h1>
+                <h1>Time.calc</h1>
             </div>
-
+            <hr>
             <div class="col-12">
                 <div class="form-group">
                     <div id="calendar1-title"></div>
@@ -143,14 +143,15 @@
                                         calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
                                         dayCount++;
                                     } else {
-                                        // 今日の日付にclassを付ける
+                                        // 今日の日付
                                         if (dayCount === today && month === currentMonth) {
                                             calendarHTML += `<td class="today">${dayCount}</td>`;
                                         }
-                                        // 月曜日にclassを付ける
+                                        // 日曜日
                                         else if (j === 0) {
                                             calendarHTML += `<td class="sun">${dayCount}</td>`;
                                         }
+                                        // 土曜日
                                         else if (j === 6) {
                                             calendarHTML += `<td class="sat">${dayCount}</td>`;
                                         }
