@@ -25,8 +25,21 @@
             <div class="col-12">
                 <h1>Time.calc <span id="viewYear"></span></h1>
                 <script>
-                    const year = new Date().getFullYear();
-                    document.getElementById('viewYear').textContent = year;
+                    
+                    setInterval(() => {
+                        const year = new Date().getFullYear();
+                        const month = new Date().getMonth() + 1;
+                        const day = new Date().getDate();
+                        const today = year + '/' + month + '/' + day;
+                        
+                        const hour = new Date().getHours();
+                        const minute = new Date().getMinutes();
+                        const second = new Date().getSeconds();
+                        const millisecond = new Date().getMilliseconds();
+                        const now = hour + ':' + minute + ':' + second;
+
+                        document.getElementById('viewYear').textContent = today + ' ' + now;
+                    }, 1000);
                 </script>
             </div>
             <hr>
