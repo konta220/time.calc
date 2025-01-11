@@ -53,149 +53,257 @@
                 <div id="calendar2-title" class="month-Tile"></div>
                 <div id="calendar2" class="calendar-wrap"></div>
             </div>
-            <style>
-                .container {
-                    padding: 1rem;
-                }
+        </div>
+        <hr>
+        <div class="col">
+            <div id="month-info"></div>
+        </div>
+        <style>
+            .container {
+                padding: 1rem;
+            }
 
-                .calendar-wrap {
-                    padding: 0 0.5rem;
-                }
+            .calendar-wrap {
+                padding: 0 0.5rem;
+            }
 
-                .calendar {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
+            .calendar {
+                width: 100%;
+                border-collapse: collapse;
+            }
 
-                .month-Tile {
-                    margin-top: 1rem;
-                    text-align: center;
-                    font-size: 1.5rem;
-                }
+            .month-Tile {
+                margin-top: 1rem;
+                text-align: center;
+                font-size: 1.5rem;
+            }
+
+            .calendar th,
+            .calendar td {
+                border: 1px solid #000;
+                text-align: center;
+                padding: 10px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .calendar th {
+                padding: 6px 10px;
+            }
+
+            @media (max-width: 767.98px) {
 
                 .calendar th,
                 .calendar td {
-                    border: 1px solid #000;
-                    text-align: center;
-                    padding: 10px;
-                    font-size: 14px;
-                    font-weight: bold;
+                    padding: 6px;
+                    font-size: 12px;
                 }
 
                 .calendar th {
-                    padding: 6px 10px;
+                    padding: 3px 6px;
                 }
+            }
 
-                @media (max-width: 767.98px) {
+            .calendar .sun {
+                color: darkred;
+                background-color: #f8e4e2;
+            }
 
-                    .calendar th,
-                    .calendar td {
-                        padding: 6px;
-                        font-size: 12px;
+            .calendar .holiday {
+                color: darkred;
+                background-color: #f8e4e2;
+            }
+
+            .calendar .sat {
+                color: darkblue;
+                background-color: lightblue;
+            }
+
+            .calendar .mute {
+                color: #707070;
+            }
+
+            .calendar .today {
+                background-color: #00ffb3;
+                color: #000;
+            }
+        </style>
+
+        <script>
+            const holiday = {
+                "2025-01-01": "元日",
+                "2025-01-13": "成人の日",
+                "2025-02-11": "建国記念の日",
+                "2025-02-23": "天皇誕生日",
+                "2025-02-24": "天皇誕生日 振替休日",
+                "2025-03-20": "春分の日",
+                "2025-04-29": "昭和の日",
+                "2025-05-03": "憲法記念日",
+                "2025-05-04": "みどりの日",
+                "2025-05-05": "こどもの日",
+                "2025-05-06": "みどりの日 振替休日",
+                "2025-07-21": "海の日",
+                "2025-08-11": "山の日",
+                "2025-09-15": "敬老の日",
+                "2025-09-23": "秋分の日",
+                "2025-10-13": "スポーツの日",
+                "2025-11-03": "文化の日",
+                "2025-11-23": "勤労感謝の日",
+                "2025-11-24": "勤労感謝の日 振替休日",
+                "2026-01-01": "元日",
+                "2026-01-12": "成人の日",
+                "2026-02-11": "建国記念の日",
+                "2026-02-23": "天皇誕生日",
+                "2026-03-20": "春分の日",
+                "2026-04-29": "昭和の日",
+                "2026-05-03": "憲法記念日",
+                "2026-05-04": "みどりの日",
+                "2026-05-05": "こどもの日",
+                "2026-05-06": "憲法記念日 振替休日",
+                "2026-07-20": "海の日",
+                "2026-08-11": "山の日",
+                "2026-09-21": "敬老の日",
+                "2026-09-22": "国民の休日",
+                "2026-09-23": "秋分の日",
+                "2026-10-12": "スポーツの日",
+                "2026-11-03": "文化の日",
+                "2026-11-23": "勤労感謝の日",
+                "2027-01-01": "元日",
+                "2027-01-11": "成人の日",
+                "2027-02-11": "建国記念の日",
+                "2027-02-23": "天皇誕生日",
+                "2027-03-21": "春分の日",
+                "2027-03-22": "春分の日 振替休日",
+                "2027-04-29": "昭和の日",
+                "2027-05-03": "憲法記念日",
+                "2027-05-04": "みどりの日",
+                "2027-05-05": "こどもの日",
+                "2027-07-19": "海の日",
+                "2027-08-11": "山の日",
+                "2027-09-20": "敬老の日",
+                "2027-09-23": "秋分の日",
+                "2027-10-11": "スポーツの日",
+                "2027-11-03": "文化の日",
+                "2027-11-23": "勤労感謝の日",
+                "2028-01-01": "元日",
+                "2028-01-10": "成人の日",
+                "2028-02-11": "建国記念の日",
+                "2028-02-23": "天皇誕生日",
+                "2028-03-20": "春分の日",
+                "2028-04-29": "昭和の日",
+                "2028-05-03": "憲法記念日",
+                "2028-05-04": "みどりの日",
+                "2028-05-05": "こどもの日",
+                "2028-07-17": "海の日",
+                "2028-08-11": "山の日",
+                "2028-09-18": "敬老の日",
+                "2028-09-22": "秋分の日",
+                "2028-10-09": "スポーツの日",
+                "2028-11-03": "文化の日",
+                "2028-11-23": "勤労感謝の日"
+            };
+
+            const date = new Date();
+            const today = date.getDate();
+            const currentMonth = date.getMonth();
+
+            function createCalendar(month) {
+                const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
+                let calendarHTML = '<table class="calendar"><thead><tr>';
+
+                for (let i = 0; i < 7; i++) {
+                    if (i === 0) {
+                        calendarHTML += `<th class="week sun">${monthDays[i]}</th>`;
+                    } else if (i === 6) {
+                        calendarHTML += `<th class="week sat">${monthDays[i]}</th>`;
+                    } else {
+                        calendarHTML += `<th class="week">${monthDays[i]}</th>`;
                     }
-
-                    .calendar th {
-                        padding: 3px 6px;
-                    }
                 }
 
-                .calendar .sun {
-                    color: darkred;
-                    background-color: #f8e4e2;
-                }
+                calendarHTML += '</tr></thead><tbody>';
 
-                .calendar .sat {
-                    color: darkblue;
-                    background-color: lightblue;
-                }
+                const daysInMonth = new Date(date.getFullYear(), month + 1, 0).getDate();
+                const firstDay = new Date(date.getFullYear(), month, 1).getDay();
 
-                .calendar .mute {
-                    color: #707070;
-                }
+                const daysInPrevMonth = new Date(date.getFullYear(), month, 0).getDate();
 
-                .calendar .today {
-                    background-color: #00ffb3;
-                    color: #000;
-                }
-            </style>
+                let dayCount = 1;
+                let prevDayCount = daysInPrevMonth - firstDay + 1;
 
-            <script>
-                const date = new Date();
-                const today = date.getDate();
-                const currentMonth = date.getMonth();
+                let notHolidayCount = 0;
 
-                function createCalendar(month) {
-                    const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
-                    let calendarHTML = '<table class="calendar"><thead><tr>';
+                for (let i = 0; i < 6; i++) {
+                    calendarHTML += '<tr>';
 
-                    for (let i = 0; i < 7; i++) {
-                        if (i === 0) {
-                            calendarHTML += `<th class="week sun">${monthDays[i]}</th>`;
-                        } else if (i === 6) {
-                            calendarHTML += `<th class="week sat">${monthDays[i]}</th>`;
+                    for (let j = 0; j < 7; j++) {
+                        if (i === 0 && j < firstDay) {
+                            calendarHTML += `<td class="mute">${prevDayCount}</td>`;
+                            prevDayCount++;
+                        } else if (dayCount > daysInMonth) {
+                            let nextMonthDayCount = dayCount - daysInMonth;
+                            calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
+                            dayCount++;
                         } else {
-                            calendarHTML += `<th class="week">${monthDays[i]}</th>`;
-                        }
-                    }
+                            var viewDay = date.getFullYear() + '-' + ('0' + (month + 1)).slice(-2) + '-' + ('0' + (dayCount)).slice(-2);
 
-                    calendarHTML += '</tr></thead><tbody>';
+                            // 今日の日付
+                            if (dayCount === today && month === currentMonth) {
+                                calendarHTML += `<td class="today">${dayCount}</td>`;
 
-                    const daysInMonth = new Date(date.getFullYear(), month + 1, 0).getDate();
-                    const firstDay = new Date(date.getFullYear(), month, 1).getDay();
-
-                    const daysInPrevMonth = new Date(date.getFullYear(), month, 0).getDate();
-
-                    let dayCount = 1;
-                    let prevDayCount = daysInPrevMonth - firstDay + 1;
-
-                    for (let i = 0; i < 6; i++) {
-                        calendarHTML += '<tr>';
-
-                        for (let j = 0; j < 7; j++) {
-                            if (i === 0 && j < firstDay) {
-                                calendarHTML += `<td class="mute">${prevDayCount}</td>`;
-                                prevDayCount++;
-                            } else if (dayCount > daysInMonth) {
-                                let nextMonthDayCount = dayCount - daysInMonth;
-                                calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
-                                dayCount++;
-                            } else {
-                                // 今日の日付
-                                if (dayCount === today && month === currentMonth) {
-                                    calendarHTML += `<td class="today">${dayCount}</td>`;
+                                // 平日
+                                if (!holiday[viewDay] && j !== 0 && j !== 6) {
+                                    notHolidayCount++;
                                 }
-                                // 日曜日
-                                else if (j === 0) {
-                                    calendarHTML += `<td class="sun">${dayCount}</td>`;
-                                }
-                                // 土曜日
-                                else if (j === 6) {
-                                    calendarHTML += `<td class="sat">${dayCount}</td>`;
-                                }
-                                else {
-                                    calendarHTML += `<td>${dayCount}</td>`;
-                                }
-                                dayCount++;
                             }
-                        }
+                            // 祝日
+                            else if (holiday[viewDay]) {
+                                // <span class="holiday-title">${holiday[viewDay]}
+                                calendarHTML += `<td class="holiday">${dayCount}</td>`;
+                            }
+                            // 日曜日
+                            else if (j === 0) {
+                                calendarHTML += `<td class="sun">${dayCount}</td>`;
+                            }
+                            // 土曜日
+                            else if (j === 6) {
+                                calendarHTML += `<td class="sat">${dayCount}</td>`;
+                            }
+                            // 平日
+                            else {
+                                calendarHTML += `<td>${dayCount}</td>`;
 
-                        calendarHTML += '</tr>';
-
-                        if (dayCount - daysInMonth > 7) {
-                            break;
+                                notHolidayCount++;
+                            }
+                            dayCount++;
                         }
                     }
 
-                    calendarHTML += '</tbody></table>';
+                    calendarHTML += '</tr>';
 
-                    return calendarHTML;
+                    if (dayCount - daysInMonth > 7) {
+                        break;
+                    }
                 }
-                document.getElementById('calendar1-title').innerHTML = (currentMonth + 1) + '月';
-                document.getElementById('calendar2-title').innerHTML = (currentMonth + 2) + '月';
-                document.getElementById('calendar1').innerHTML = createCalendar(currentMonth)
-                document.getElementById('calendar2').innerHTML = createCalendar(currentMonth + 1);
-            </script>
-        </div>
+
+                calendarHTML += '</tbody></table>';
+
+                return { month: month + 1, calendarHTML, notHolidayCount };
+            }
+            const monthCalendar1 = createCalendar(currentMonth);
+            const monthCalendar2 = createCalendar(currentMonth + 1);
+
+            document.getElementById('calendar1-title').innerHTML = monthCalendar1.month + '月';
+            document.getElementById('calendar2-title').innerHTML = monthCalendar2.month + '月';
+
+            document.getElementById('calendar1').innerHTML = monthCalendar1.calendarHTML;
+            document.getElementById('calendar2').innerHTML = monthCalendar2.calendarHTML;
+
+            document.getElementById('month-info').innerHTML =
+                '<p>' + monthCalendar1.month + '月 平日：' + monthCalendar1.notHolidayCount + '日</p>'
+                + '<p>' + monthCalendar2.month + '月 平日：' + monthCalendar2.notHolidayCount + '日</p>';
+        </script>
+    </div>
     </div>
     </div>
 </body>
