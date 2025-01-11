@@ -59,7 +59,7 @@
                 }
 
                 .calendar-wrap {
-                    padding: 0 2rem;
+                    padding: 0 0.5rem;
                 }
 
                 .calendar {
@@ -190,8 +190,8 @@
 
                     return calendarHTML;
                 }
-                document.getElementById('calendar1-title').innerHTML = currentMonth + 1 + '月';
-                document.getElementById('calendar2-title').innerHTML = currentMonth + 2 + '月';
+                document.getElementById('calendar1-title').innerHTML = (currentMonth + 1) + '月';
+                document.getElementById('calendar2-title').innerHTML = (currentMonth + 2) + '月';
                 document.getElementById('calendar1').innerHTML = createCalendar(currentMonth)
                 document.getElementById('calendar2').innerHTML = createCalendar(currentMonth + 1);
             </script>
