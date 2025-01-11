@@ -24,22 +24,24 @@
         <div class="row">
             <div class="col-12">
                 <h1>Time.calc</h1>
-                <h2 id="viewYear"></h2>
+                <h2 id="viewDay"></h2>
                 <script>
-
                     setInterval(() => {
-                        const year = new Date().getFullYear();
-                        const month = ('0' + (new Date().getMonth() + 1)).slice(-2);
-                        const day = ('0' + new Date().getDate()).slice(-2);
+                        const date = new Date();
+                        const year = date.getFullYear();
+                        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+                        const day = ('0' + date.getDate()).slice(-2);
                         const today = year + '/' + month + '/' + day;
 
-                        const hour = ('0' + new Date().getHours()).slice(-2);
-                        const minute = ('0' + new Date().getMinutes()).slice(-2);
-                        const second = ('0' + new Date().getSeconds()).slice(-2);
-                        const millisecond = ('0' + new Date().getMilliseconds()).slice(-2);
+                        const hour = ('0' + date.getHours()).slice(-2);
+                        const minute = ('0' + date.getMinutes()).slice(-2);
+                        const second = ('0' + date.getSeconds()).slice(-2);
+                        const millisecond = ('0' + date.getMilliseconds()).slice(-2);
                         const now = hour + ':' + minute + ':' + second;
 
-                        document.getElementById('viewYear').textContent = today + ' ' + now;
+                        document.getElementById('viewDay').textContent = today + ' ' + now;
+
+                        ViewCalendar(date);
                     }, 100);
                 </script>
             </div>
@@ -55,9 +57,15 @@
             </div>
         </div>
         <hr>
-        <div class="col">
-            <div id="month-info"></div>
+        <div class="row">
+            <div class="col">
+                <div id="month-info1"></div>
+            </div>
+            <div class="col">
+                <div id="month-info2"></div>
+            </div>
         </div>
+
         <style>
             .container {
                 padding: 1rem;
@@ -78,13 +86,16 @@
                 font-size: 1.5rem;
             }
 
+            .calendar th {
+                font-weight: bold;
+            }
+
             .calendar th,
             .calendar td {
                 border: 1px solid #000;
                 text-align: center;
                 padding: 10px;
                 font-size: 14px;
-                font-weight: bold;
             }
 
             .calendar th {
@@ -203,105 +214,113 @@
                 "2028-11-23": "勤労感謝の日"
             };
 
-            const date = new Date();
-            const today = date.getDate();
-            const currentMonth = date.getMonth();
+            function ViewCalendar(date) {
+                const today = date.getDate();
+                const currentMonth = date.getMonth();
 
-            function createCalendar(month) {
-                const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
-                let calendarHTML = '<table class="calendar"><thead><tr>';
+                function createCalendar(month) {
+                    const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
+                    let calendarHTML = '<table class="calendar"><thead><tr>';
 
-                for (let i = 0; i < 7; i++) {
-                    if (i === 0) {
-                        calendarHTML += `<th class="week sun">${monthDays[i]}</th>`;
-                    } else if (i === 6) {
-                        calendarHTML += `<th class="week sat">${monthDays[i]}</th>`;
-                    } else {
-                        calendarHTML += `<th class="week">${monthDays[i]}</th>`;
-                    }
-                }
-
-                calendarHTML += '</tr></thead><tbody>';
-
-                const daysInMonth = new Date(date.getFullYear(), month + 1, 0).getDate();
-                const firstDay = new Date(date.getFullYear(), month, 1).getDay();
-
-                const daysInPrevMonth = new Date(date.getFullYear(), month, 0).getDate();
-
-                let dayCount = 1;
-                let prevDayCount = daysInPrevMonth - firstDay + 1;
-
-                let notHolidayCount = 0;
-
-                for (let i = 0; i < 6; i++) {
-                    calendarHTML += '<tr>';
-
-                    for (let j = 0; j < 7; j++) {
-                        if (i === 0 && j < firstDay) {
-                            calendarHTML += `<td class="mute">${prevDayCount}</td>`;
-                            prevDayCount++;
-                        } else if (dayCount > daysInMonth) {
-                            let nextMonthDayCount = dayCount - daysInMonth;
-                            calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
-                            dayCount++;
+                    for (let i = 0; i < 7; i++) {
+                        if (i === 0) {
+                            calendarHTML += `<th class="week sun">${monthDays[i]}</th>`;
+                        } else if (i === 6) {
+                            calendarHTML += `<th class="week sat">${monthDays[i]}</th>`;
                         } else {
-                            var viewDay = date.getFullYear() + '-' + ('0' + (month + 1)).slice(-2) + '-' + ('0' + (dayCount)).slice(-2);
-
-                            // 今日の日付
-                            if (dayCount === today && month === currentMonth) {
-                                calendarHTML += `<td class="today">${dayCount}</td>`;
-
-                                // 平日
-                                if (!holiday[viewDay] && j !== 0 && j !== 6) {
-                                    notHolidayCount++;
-                                }
-                            }
-                            // 祝日
-                            else if (holiday[viewDay]) {
-                                // <span class="holiday-title">${holiday[viewDay]}
-                                calendarHTML += `<td class="holiday">${dayCount}</td>`;
-                            }
-                            // 日曜日
-                            else if (j === 0) {
-                                calendarHTML += `<td class="sun">${dayCount}</td>`;
-                            }
-                            // 土曜日
-                            else if (j === 6) {
-                                calendarHTML += `<td class="sat">${dayCount}</td>`;
-                            }
-                            // 平日
-                            else {
-                                calendarHTML += `<td>${dayCount}</td>`;
-
-                                notHolidayCount++;
-                            }
-                            dayCount++;
+                            calendarHTML += `<th class="week">${monthDays[i]}</th>`;
                         }
                     }
 
-                    calendarHTML += '</tr>';
+                    calendarHTML += '</tr></thead><tbody>';
 
-                    if (dayCount - daysInMonth > 7) {
-                        break;
+                    const daysInMonth = new Date(date.getFullYear(), month + 1, 0).getDate();
+                    const firstDay = new Date(date.getFullYear(), month, 1).getDay();
+
+                    const daysInPrevMonth = new Date(date.getFullYear(), month, 0).getDate();
+
+                    let dayCount = 1;
+                    let prevDayCount = daysInPrevMonth - firstDay + 1;
+
+                    let notHolidayCount = 0;
+
+                    for (let i = 0; i < 6; i++) {
+                        calendarHTML += '<tr>';
+
+                        for (let j = 0; j < 7; j++) {
+                            if (i === 0 && j < firstDay) {
+                                calendarHTML += `<td class="mute">${prevDayCount}</td>`;
+                                prevDayCount++;
+                            } else if (dayCount > daysInMonth) {
+                                let nextMonthDayCount = dayCount - daysInMonth;
+                                calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
+                                dayCount++;
+                            } else {
+                                var viewDay = date.getFullYear() + '-' + ('0' + (month + 1)).slice(-2) + '-' + ('0' + (dayCount)).slice(-2);
+
+                                // 今日の日付
+                                if (dayCount === today && month === currentMonth) {
+                                    calendarHTML += `<td class="today">${dayCount}</td>`;
+
+                                    // 平日
+                                    if (!holiday[viewDay] && j !== 0 && j !== 6) {
+                                        notHolidayCount++;
+                                    }
+                                }
+                                // 祝日
+                                else if (holiday[viewDay]) {
+                                    // <span class="holiday-title">${holiday[viewDay]}
+                                    calendarHTML += `<td class="holiday">${dayCount}</td>`;
+                                }
+                                // 日曜日
+                                else if (j === 0) {
+                                    calendarHTML += `<td class="sun">${dayCount}</td>`;
+                                }
+                                // 土曜日
+                                else if (j === 6) {
+                                    calendarHTML += `<td class="sat">${dayCount}</td>`;
+                                }
+                                // 平日
+                                else {
+                                    calendarHTML += `<td>${dayCount}</td>`;
+
+                                    notHolidayCount++;
+                                }
+                                dayCount++;
+                            }
+                        }
+
+                        calendarHTML += '</tr>';
+
+                        if (dayCount - daysInMonth > 7) {
+                            break;
+                        }
                     }
+
+                    calendarHTML += '</tbody></table>';
+
+                    return { month: (month + 1), calendarHTML, notHolidayCount };
+                }
+                const month1 = createCalendar(currentMonth);
+                const month2 = createCalendar(currentMonth + 1);
+
+                document.getElementById('calendar1-title').innerHTML = month1.month + '月';
+                document.getElementById('calendar2-title').innerHTML = month2.month + '月';
+
+                document.getElementById('calendar1').innerHTML = month1.calendarHTML;
+                document.getElementById('calendar2').innerHTML = month2.calendarHTML;
+
+                function createMonthInfo(month) {
+                    return '<div class="month-calc-info">'
+                        + '<p>' + month.month + '月の平日：' + month.notHolidayCount + '日  </p>'
+                        + '<p>7.5H稼働だと' + (month.notHolidayCount * 7.5) + 'H</p>'
+                        + '<p>8H稼働だと' + (month.notHolidayCount * 8) + 'H</p>'
+                        + '</div>';
                 }
 
-                calendarHTML += '</tbody></table>';
-
-                return { month: month + 1, calendarHTML, notHolidayCount };
+                document.getElementById('month-info1').innerHTML = createMonthInfo(month1)
+                document.getElementById('month-info2').innerHTML = createMonthInfo(month2);
             }
-            const monthCalendar1 = createCalendar(currentMonth);
-            const monthCalendar2 = createCalendar(currentMonth + 1);
-
-            document.getElementById('calendar1-title').innerHTML = monthCalendar1.month + '月';
-            document.getElementById('calendar2-title').innerHTML = monthCalendar2.month + '月';
-
-            document.getElementById('calendar1').innerHTML = monthCalendar1.calendarHTML;
-            document.getElementById('calendar2').innerHTML = monthCalendar2.calendarHTML;
-
-            document.getElementById('month-info').innerHTML =
-                '<p>' + monthCalendar1.month + '月 平日：' + monthCalendar1.notHolidayCount + '日</p>'
-                + '<p>' + monthCalendar2.month + '月 平日：' + monthCalendar2.notHolidayCount + '日</p>';
         </script>
     </div>
     </div>
