@@ -43,161 +43,160 @@
                     }, 100);
                 </script>
             </div>
-            <hr>
-            <div class="row">
-                <div class="col">
-                    <div id="calendar1-title" class="month-Tile"></div>
-                    <div id="calendar1" class="calendar-wrap"></div>
-                </div>
-                <div class="col">
-                    <div id="calendar2-title" class="month-Tile"></div>
-                    <div id="calendar2" class="calendar-wrap"></div>
-                </div>
-                <style>
-                    .calendar-wrap {
-                        padding-left: 0.5rem;
-                        padding-right: 0.5rem;
-                        max-width: 1110px;
-                        text-align: center;
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 40px;
-                    }
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <div id="calendar1-title" class="month-Tile"></div>
+                <div id="calendar1" class="calendar-wrap"></div>
+            </div>
+            <div class="col">
+                <div id="calendar2-title" class="month-Tile"></div>
+                <div id="calendar2" class="calendar-wrap"></div>
+            </div>
+            <style>
+                .container {
+                    padding: 1rem;
+                }
 
-                    .calendar {
-                        width: 100%;
-                        border-collapse: collapse;
-                    }
+                .calendar-wrap {
+                    padding: 0 2rem;
+                }
 
-                    .month-Tile {
-                        margin-top: 1rem;
-                        text-align: center;
-                        margin-left: 0.5rem;
-                        font-size: 1.5rem;
-                    }
+                .calendar {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+
+                .month-Tile {
+                    margin-top: 1rem;
+                    text-align: center;
+                    font-size: 1.5rem;
+                }
+
+                .calendar th,
+                .calendar td {
+                    border: 1px solid #000;
+                    text-align: center;
+                    padding: 10px;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+
+                .calendar th {
+                    padding: 6px 10px;
+                }
+
+                @media (max-width: 767.98px) {
 
                     .calendar th,
                     .calendar td {
-                        border: 1px solid #000;
-                        text-align: center;
-                        padding: 10px;
-                        font-size: 14px;
-                        font-weight: bold;
+                        padding: 6px;
+                        font-size: 12px;
                     }
 
                     .calendar th {
-                        padding: 6px 10px;
+                        padding: 3px 6px;
                     }
+                }
 
-                    @media (max-width: 767.98px) {
+                .calendar .sun {
+                    color: darkred;
+                    background-color: #f8e4e2;
+                }
 
-                        .calendar th,
-                        .calendar td {
-                            padding: 6px;
-                            font-size: 12px;
+                .calendar .sat {
+                    color: darkblue;
+                    background-color: lightblue;
+                }
+
+                .calendar .mute {
+                    color: #707070;
+                }
+
+                .calendar .today {
+                    background-color: #00ffb3;
+                    color: #000;
+                }
+            </style>
+
+            <script>
+                const date = new Date();
+                const today = date.getDate();
+                const currentMonth = date.getMonth();
+
+                function createCalendar(month) {
+                    const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
+                    let calendarHTML = '<table class="calendar"><thead><tr>';
+
+                    for (let i = 0; i < 7; i++) {
+                        if (i === 0) {
+                            calendarHTML += `<th class="week sun">${monthDays[i]}</th>`;
+                        } else if (i === 6) {
+                            calendarHTML += `<th class="week sat">${monthDays[i]}</th>`;
+                        } else {
+                            calendarHTML += `<th class="week">${monthDays[i]}</th>`;
                         }
-
-                        .calendar th {
-                            padding: 3px 6px;
-                        }
                     }
 
-                    .calendar .sun {
-                        color: darkred;
-                        background-color: #f8e4e2;
-                    }
+                    calendarHTML += '</tr></thead><tbody>';
 
-                    .calendar .sat {
-                        color: darkblue;
-                        background-color: lightblue;
-                    }
+                    const daysInMonth = new Date(date.getFullYear(), month + 1, 0).getDate();
+                    const firstDay = new Date(date.getFullYear(), month, 1).getDay();
 
-                    .calendar .mute {
-                        color: #707070;
-                    }
+                    const daysInPrevMonth = new Date(date.getFullYear(), month, 0).getDate();
 
-                    .calendar .today {
-                        background-color: #00ffb3;
-                        color: #000;
-                    }
-                </style>
+                    let dayCount = 1;
+                    let prevDayCount = daysInPrevMonth - firstDay + 1;
 
-                <script>
-                    const date = new Date();
-                    const today = date.getDate();
-                    const currentMonth = date.getMonth();
+                    for (let i = 0; i < 6; i++) {
+                        calendarHTML += '<tr>';
 
-                    function createCalendar(month) {
-                        const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
-                        let calendarHTML = '<table class="calendar"><thead><tr>';
-
-                        for (let i = 0; i < 7; i++) {
-                            if (i === 0) {
-                                calendarHTML += `<th class="sun">${monthDays[i]}</th>`;
-                            } else if (i === 6) {
-                                calendarHTML += `<th class="sat">${monthDays[i]}</th>`;
+                        for (let j = 0; j < 7; j++) {
+                            if (i === 0 && j < firstDay) {
+                                calendarHTML += `<td class="mute">${prevDayCount}</td>`;
+                                prevDayCount++;
+                            } else if (dayCount > daysInMonth) {
+                                let nextMonthDayCount = dayCount - daysInMonth;
+                                calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
+                                dayCount++;
                             } else {
-                                calendarHTML += `<th>${monthDays[i]}</th>`;
-                            }
-                        }
-
-                        calendarHTML += '</tr></thead><tbody>';
-
-                        const daysInMonth = new Date(date.getFullYear(), month + 1, 0).getDate();
-                        const firstDay = new Date(date.getFullYear(), month, 1).getDay();
-
-                        const daysInPrevMonth = new Date(date.getFullYear(), month, 0).getDate();
-
-                        let dayCount = 1;
-                        let prevDayCount = daysInPrevMonth - firstDay + 1;
-
-                        for (let i = 0; i < 6; i++) {
-                            calendarHTML += '<tr>';
-
-                            for (let j = 0; j < 7; j++) {
-                                if (i === 0 && j < firstDay) {
-                                    calendarHTML += `<td class="mute">${prevDayCount}</td>`;
-                                    prevDayCount++;
-                                } else if (dayCount > daysInMonth) {
-                                    let nextMonthDayCount = dayCount - daysInMonth;
-                                    calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
-                                    dayCount++;
-                                } else {
-                                    // 今日の日付
-                                    if (dayCount === today && month === currentMonth) {
-                                        calendarHTML += `<td class="today">${dayCount}</td>`;
-                                    }
-                                    // 日曜日
-                                    else if (j === 0) {
-                                        calendarHTML += `<td class="sun">${dayCount}</td>`;
-                                    }
-                                    // 土曜日
-                                    else if (j === 6) {
-                                        calendarHTML += `<td class="sat">${dayCount}</td>`;
-                                    }
-                                    else {
-                                        calendarHTML += `<td>${dayCount}</td>`;
-                                    }
-                                    dayCount++;
+                                // 今日の日付
+                                if (dayCount === today && month === currentMonth) {
+                                    calendarHTML += `<td class="today">${dayCount}</td>`;
                                 }
-                            }
-
-                            calendarHTML += '</tr>';
-
-                            if (dayCount - daysInMonth > 7) {
-                                break;
+                                // 日曜日
+                                else if (j === 0) {
+                                    calendarHTML += `<td class="sun">${dayCount}</td>`;
+                                }
+                                // 土曜日
+                                else if (j === 6) {
+                                    calendarHTML += `<td class="sat">${dayCount}</td>`;
+                                }
+                                else {
+                                    calendarHTML += `<td>${dayCount}</td>`;
+                                }
+                                dayCount++;
                             }
                         }
 
-                        calendarHTML += '</tbody></table>';
+                        calendarHTML += '</tr>';
 
-                        return calendarHTML;
+                        if (dayCount - daysInMonth > 7) {
+                            break;
+                        }
                     }
-                    document.getElementById('calendar1-title').innerHTML = currentMonth + 1 + '月';
-                    document.getElementById('calendar2-title').innerHTML = currentMonth + 2 + '月';
-                    document.getElementById('calendar1').innerHTML = createCalendar(currentMonth)
-                    document.getElementById('calendar2').innerHTML = createCalendar(currentMonth + 1);
-                </script>
-            </div>
+
+                    calendarHTML += '</tbody></table>';
+
+                    return calendarHTML;
+                }
+                document.getElementById('calendar1-title').innerHTML = currentMonth + 1 + '月';
+                document.getElementById('calendar2-title').innerHTML = currentMonth + 2 + '月';
+                document.getElementById('calendar1').innerHTML = createCalendar(currentMonth)
+                document.getElementById('calendar2').innerHTML = createCalendar(currentMonth + 1);
+            </script>
         </div>
+    </div>
     </div>
 </body>
