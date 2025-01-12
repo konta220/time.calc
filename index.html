@@ -18,7 +18,51 @@
             <div class="col-12">
                 <h1>Time.calc</h1>
                 <h2 id="viewDay"></h2>
+                <button class="btn btn-primary" onclick="prevMonth();">先月</button>
+                <button class="btn btn-primary" onclick="nowMonth();">今月</button>
+                <button class="btn btn-primary" onclick="nextMonth();">次月</button>
                 <script>
+                    const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
+
+                    // パラメータの年月を取得
+                    const paramYear = Number(new URL(window.location.href).searchParams.get('year'));
+                    const paramMonth = Number(new URL(window.location.href).searchParams.get('month'));
+
+                    function prevMonth() {
+                        const prevMonthDate = GetViewDate();
+                        prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
+
+                        location.search = '?year=' + prevMonthDate.getFullYear() + '&month=' + (prevMonthDate.getMonth() + 1);
+                    }
+
+                    function nowMonth() {
+                        location.href = location.href.split('?')[0];
+                    }
+
+                    function nextMonth() {
+                        const nextMonthDate = GetViewDate();
+                        nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+
+                        location.search = '?year=' + nextMonthDate.getFullYear() + '&month=' + (nextMonthDate.getMonth() + 1);
+                    }
+
+                    function ExistParam() {
+                        // パラメータがない場合はfalse
+                        return (paramYear !== 0 && paramMonth !== 0);
+                    }
+
+                    function GetViewDate() {
+                        let viewYear = new Date().getFullYear();
+                        let viewMonth = new Date().getMonth();
+
+                        // パラメータがある場合はパラメータの年月を取得
+                        if (ExistParam()) {
+                            viewYear = paramYear;
+                            viewMonth = paramMonth - 1;
+                        }
+                        return new Date(viewYear, viewMonth, 1);
+                    }
+
                     function ViewDay(date) {
                         const year = date.getFullYear();
                         const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -34,12 +78,17 @@
                         document.getElementById('viewDay').textContent = today + ' ' + now;
                     }
 
-                    setInterval(() => {
+                    function Reload() {
                         const date = new Date();
 
-                        ViewDay(date);
+                        if (ExistParam()) {
+                            date.setFullYear(paramYear);
+                            date.setMonth(paramMonth - 1);
+                        }
+
+                        ViewDay(new Date());
                         ViewCalendar(date);
-                    }, 100);
+                    }
                 </script>
             </div>
         </div>
@@ -223,16 +272,24 @@
                 "2028-11-23": "勤労感謝の日"
             };
 
-            const monthDays = ["日", "月", "火", "水", "木", "金", "土"];
-
             function ViewCalendar(date) {
                 const currentMonth = date.getMonth();
 
                 const month1 = createCalendar(date, currentMonth);
-                const month2 = createCalendar(date, currentMonth + 1);
 
-                document.getElementById('calendar1-title').innerHTML = month1.viewMonth + '月';
-                document.getElementById('calendar2-title').innerHTML = month2.viewMonth + '月';
+                const nextMonthDate = new Date(date);
+                nextMonthDate.setMonth(currentMonth + 1);
+
+                let month2 = createCalendar(nextMonthDate, currentMonth + 1);
+
+                // 12月の場合
+                if (currentMonth === 11) {
+                    const january = new Date(date.getFullYear() + 1, 0, date.getDate());
+                    month2 = createCalendar(january, 0);
+                }
+
+                document.getElementById('calendar1-title').innerHTML = month1.viewDate.getFullYear() + '年 ' + (month1.viewDate.getMonth() + 1) + '月';
+                document.getElementById('calendar2-title').innerHTML = month2.viewDate.getFullYear() + '年 ' + (month2.viewDate.getMonth() + 1) + '月';
 
                 document.getElementById('calendar1').innerHTML = month1.calendarHTML;
                 document.getElementById('calendar2').innerHTML = month2.calendarHTML;
@@ -241,7 +298,7 @@
                 document.getElementById('month-info2').innerHTML = createMonthInfo(month2);
             }
 
-            function createCalendar(today, currentMonth) {
+            function createCalendar(today, viewMonth) {
                 const month = today.getMonth();
                 const date = today.getDate();
 
@@ -259,10 +316,10 @@
 
                 calendarHTML += '</tr></thead><tbody>';
 
-                const daysInMonth = new Date(today.getFullYear(), currentMonth + 1, 0).getDate();
-                const firstDay = new Date(today.getFullYear(), currentMonth, 1).getDay();
+                const daysInMonth = new Date(today.getFullYear(), viewMonth + 1, 0).getDate();
+                const firstDay = new Date(today.getFullYear(), viewMonth, 1).getDay();
 
-                const daysInPrevMonth = new Date(today.getFullYear(), currentMonth, 0).getDate();
+                const daysInPrevMonth = new Date(today.getFullYear(), viewMonth, 0).getDate();
 
                 let dayCount = 1;
                 let prevDayCount = daysInPrevMonth - firstDay + 1;
@@ -281,13 +338,19 @@
                             calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
                             dayCount++;
                         } else {
-                            var viewDay = today.getFullYear() + '-' + ('0' + (currentMonth + 1)).slice(-2) + '-' + ('0' + (dayCount)).slice(-2);
+                            const viewDay = today.getFullYear() + '-' + ('0' + (viewMonth + 1)).slice(-2) + '-' + ('0' + (dayCount)).slice(-2);
 
                             // 今日の日付
-                            if (dayCount === date && month === currentMonth) {
+                            if (dayCount === date
+                                && month === viewMonth
+                                && today.getMonth() === new Date().getMonth()
+                                && today.getDate() === new Date().getDate()
+                                && today.getFullYear() === new Date().getFullYear()) {
+
                                 calendarHTML += `<td class="today">${dayCount}</td>`;
 
                                 // 平日
+                                // 今日が祝日でなく、土日でない場合
                                 if (!holiday[viewDay] && j !== 0 && j !== 6) {
                                     notHolidayCount++;
                                 }
@@ -324,7 +387,7 @@
 
                 calendarHTML += '</tbody></table>';
 
-                return { viewMonth: (currentMonth + 1), calendarHTML, notHolidayCount };
+                return { viewMonth: (viewMonth + 1), calendarHTML, notHolidayCount, viewDate: today };
             }
 
             function createMonthInfo(month) {
@@ -334,6 +397,12 @@
                     + '<p>8H稼働だと' + (month.notHolidayCount * 8) + 'H</p>'
                     + '</div>';
             }
+
+            setInterval(() => {
+                Reload();
+            }, 100);
+
+            Reload();
         </script>
     </div>
 </body>
