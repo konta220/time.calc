@@ -28,6 +28,7 @@
                     const paramYear = Number(new URL(window.location.href).searchParams.get('year'));
                     const paramMonth = Number(new URL(window.location.href).searchParams.get('month'));
 
+                    // 先月の表示
                     function prevMonth() {
                         const prevMonthDate = GetViewDate();
                         prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
@@ -35,10 +36,13 @@
                         location.search = '?year=' + prevMonthDate.getFullYear() + '&month=' + (prevMonthDate.getMonth() + 1);
                     }
 
+                    // 今月の表示
                     function nowMonth() {
+                        // パラメータがない場合のURLで表示
                         location.href = location.href.split('?')[0];
                     }
 
+                    // 次月の表示
                     function nextMonth() {
                         const nextMonthDate = GetViewDate();
                         nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
