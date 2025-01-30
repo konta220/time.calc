@@ -83,11 +83,10 @@
                     }
 
                     function Reload() {
-                        const date = new Date();
+                        let date = new Date();
 
                         if (ExistParam()) {
-                            date.setFullYear(paramYear);
-                            date.setMonth(paramMonth - 1);
+                            date = GetViewDate();
                         }
 
                         ViewDay(new Date());
@@ -292,8 +291,8 @@
                     month2 = createCalendar(january, 0);
                 }
 
-                document.getElementById('calendar1-title').innerHTML = month1.viewDate.getFullYear() + '年 ' + (month1.viewDate.getMonth() + 1) + '月';
-                document.getElementById('calendar2-title').innerHTML = month2.viewDate.getFullYear() + '年 ' + (month2.viewDate.getMonth() + 1) + '月';
+                document.getElementById('calendar1-title').innerHTML = month1.viewDate.getFullYear() + '年 ' + (month1.viewMonth + 1) + '月';
+                document.getElementById('calendar2-title').innerHTML = month2.viewDate.getFullYear() + '年 ' + (month2.viewMonth + 1) + '月';
 
                 document.getElementById('calendar1').innerHTML = month1.calendarHTML;
                 document.getElementById('calendar2').innerHTML = month2.calendarHTML;
@@ -391,7 +390,7 @@
 
                 calendarHTML += '</tbody></table>';
 
-                return { viewMonth: (viewMonth + 1), calendarHTML, notHolidayCount, viewDate: today };
+                return { viewMonth, calendarHTML, notHolidayCount, viewDate: today };
             }
 
             function createMonthInfo(month) {
