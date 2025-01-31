@@ -334,10 +334,13 @@
                     calendarHTML += '<tr>';
 
                     for (let day = 0; day < 7; day++) {
+                        // 先月の日付
                         if (weekCount === 0 && day < firstDay) {
                             calendarHTML += `<td class="mute">${prevDayCount}</td>`;
                             prevDayCount++;
-                        } else if (dayCount > daysInMonth) {
+                        }
+                        // 来月の日付
+                        else if (dayCount > daysInMonth) {
                             let nextMonthDayCount = dayCount - daysInMonth;
                             calendarHTML += `<td class="mute">${nextMonthDayCount}</td>`;
                             dayCount++;
@@ -359,6 +362,7 @@
                             }
                             // 祝日
                             else if (holiday[viewDay]) {
+                                // 祝日の名称を表示することもできる
                                 // <span class="holiday-title">${holiday[viewDay]}
                                 calendarHTML += `<td class="holiday">${dayCount}</td>`;
                             }
@@ -376,6 +380,7 @@
 
                                 notHolidayCount++;
                             }
+
                             dayCount++;
                         }
                     }
