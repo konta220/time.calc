@@ -64,6 +64,7 @@
                             viewYear = paramYear;
                             viewMonth = paramMonth - 1;
                         }
+
                         return new Date(viewYear, viewMonth, 1);
                     }
 
@@ -329,11 +330,11 @@
 
                 let notHolidayCount = 0;
 
-                for (let i = 0; i < 6; i++) {
+                for (let weekCount = 0; weekCount < 6; weekCount++) {
                     calendarHTML += '<tr>';
 
-                    for (let j = 0; j < 7; j++) {
-                        if (i === 0 && j < firstDay) {
+                    for (let day = 0; day < 7; day++) {
+                        if (weekCount === 0 && day < firstDay) {
                             calendarHTML += `<td class="mute">${prevDayCount}</td>`;
                             prevDayCount++;
                         } else if (dayCount > daysInMonth) {
@@ -344,17 +345,15 @@
                             const viewDay = today.getFullYear() + '-' + ('0' + (viewMonth + 1)).slice(-2) + '-' + ('0' + (dayCount)).slice(-2);
 
                             // 今日の日付
-                            if (dayCount === date
-                                && month === viewMonth
-                                && today.getMonth() === new Date().getMonth()
-                                && today.getDate() === new Date().getDate()
+                            if (viewMonth === new Date().getMonth()
+                                && dayCount === new Date().getDate()
                                 && today.getFullYear() === new Date().getFullYear()) {
 
                                 calendarHTML += `<td class="today">${dayCount}</td>`;
 
                                 // 平日
                                 // 今日が祝日でなく、土日でない場合
-                                if (!holiday[viewDay] && j !== 0 && j !== 6) {
+                                if (!holiday[viewDay] && day !== 0 && day !== 6) {
                                     notHolidayCount++;
                                 }
                             }
@@ -364,11 +363,11 @@
                                 calendarHTML += `<td class="holiday">${dayCount}</td>`;
                             }
                             // 日曜日
-                            else if (j === 0) {
+                            else if (day === 0) {
                                 calendarHTML += `<td class="sun">${dayCount}</td>`;
                             }
                             // 土曜日
-                            else if (j === 6) {
+                            else if (day === 6) {
                                 calendarHTML += `<td class="sat">${dayCount}</td>`;
                             }
                             // 平日
@@ -395,7 +394,7 @@
 
             function createMonthInfo(month) {
                 return '<div class="month-calc-info">'
-                    + '<p>' + month.viewMonth + '月の平日：' + month.notHolidayCount + '日  </p>'
+                    + '<p>' + (month.viewMonth + 1) + '月の平日：' + month.notHolidayCount + '日  </p>'
                     + '<p>7.5H稼働だと' + (month.notHolidayCount * 7.5) + 'H</p>'
                     + '<p>8H稼働だと' + (month.notHolidayCount * 8) + 'H</p>'
                     + '</div>';
